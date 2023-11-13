@@ -1,0 +1,18 @@
+sequenceDiagram
+    Worker->>DHCP: User Class iPXE
+    par
+      DHCP->>Worker: File: undionly.kpxe
+      DHCP->>Worker: http://192.168.13.1:8080/boot.ipxe
+    end
+    Worker->>HTTP: GET boot.ipxe
+    HTTP->>Worker: 200 boot.ipxe
+    par Worker Request resources
+      Worker->>HTTP: GET flatcar_production_pxe.vmlinuz 
+      Worker->>HTTP: GET flatcar_production_pxe_image.cpio.gz 
+      Worker->>HTTP: GET k1.json
+    end
+    par HTTP Return resources
+      HTTP->>Worker: 200 flatcar_production_pxe.vmlinuz 
+      HTTP->>Worker: 200 flatcar_production_pxe_image.cpio.gz 
+      HTTP->>Worker: 200 k1.json
+    end

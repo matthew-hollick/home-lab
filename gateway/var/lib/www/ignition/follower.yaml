@@ -1,0 +1,39 @@
+variant: flatcar
+version: 1.0.0
+passwd:
+  users:
+    - name: core
+      ssh_authorized_keys:
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDEuAtrMrT4fli0hoFFY7nVAU0pBE0Jj2UAH8M9smUCQQ5LCEqUpRra6Om/auHfnsrkd25wVKSKjmZwE+AIoKU1HhQRxZGoAsm1dp+PJsXLkd0GDZguuzaxYQs2z8imdXeZBXyaXjMbWwXfiSPbskOkurytTlE92mR6QRy0Rd1PKNcwMgnR6H63sfiWLpKjCXxzuLNngxfgwRWBKdlzfca6MgZAZfGzuhQum9xxBhSghL01dN6XWEpoh5LLb3ayiq6nHXJiciDDomq+5zAiv+3k9gDK92iYb0r/yvQ9JHUcMtavwiDcVUP8sMyVr0HGt5Txxbij5316+t24RAIg0yYG2DB0DtXM0iqoTqcit8S6ETtE/XSwrPTmUE6CwmyBmmOXa0wTtqd6k2PgKJZiHic/FAiUm90JLoD0Yt6Iy22jKCDFsrNCUlg6MKSTB9s+s23G2dd20UuGqUikLEuYiLc+ts3BnBI9yZ2Fmb/C0gZU3DJJir8pPDwsq4lmfc1rDO0= mjh@zaphod
+storage:
+  disks:
+    - device: /dev/sda
+      wipe_table: true
+    - device: /dev/sdb
+      wipe_table: true
+  filesystems:
+    - path: /var/lib/data
+      device: /dev/sda
+      format: ext4
+      label: HDD
+      wipe_filesystem: true
+      with_mount_unit: true
+    - path: /data
+      device: /dev/sdb
+      format: ext4
+      label: SSD
+      wipe_filesystem: true
+      with_mount_unit: true
+  files:
+    - path: /opt/bin/kubectl
+      mode: 0755
+      contents:
+        source: https://dl.k8s.io/v1.26.0/bin/linux/amd64/kubectl
+    - path: /opt/bin/kubeadm
+      mode: 0755
+      contents:
+        source: https://dl.k8s.io/v1.26.0/bin/linux/amd64/kubeadm
+    - path: /opt/bin/kubelet
+      mode: 0755
+      contents:
+        source: https://dl.k8s.io/v1.26.0/bin/linux/amd64/kubelet
