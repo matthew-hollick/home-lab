@@ -25,6 +25,15 @@ storage:
       wipe_filesystem: true
       with_mount_unit: true
   files:
+    - path: /opt/bin/customise.sh
+      mode: 0755
+      contents:
+        inline: |
+          #!/usr/bin/env bash
+          /usr/bin/curl -sSL https://github.com/cilium/cilium-cli/releases/download/v0.15.12/cilium-linux-amd64.tar.gz | /bin/tar zxf - -C /opt/bin
+          /usr/bin/curl -sSL https://get.helm.sh/helm-v3.13.2-linux-amd64.tar.gz | /bin/tar zxf - -C /tmp
+          install /tmp/linux-amd64/helm /opt/bin/helm
+          rm -rf /tmp/linux-amd64
     - path: /opt/bin/kubectl
       mode: 0755
       contents:
@@ -59,6 +68,18 @@ storage:
               flex-volume-plugin-dir: "/opt/libexec/kubernetes/kubelet-plugins/volume/exec/"
 systemd:
   units:
+    - name: customise.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Local customisations
+        Wants=network-online.target
+        After=network-online.target
+        [Service]
+        Type=oneshot
+        ExecStart=/opt/bin/customise.sh
+        [Install]
+        WantedBy=multi-user.target
     - name: kubelet.service
       enabled: true
       dropins:
